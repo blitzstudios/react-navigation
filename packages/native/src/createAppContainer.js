@@ -332,16 +332,18 @@ export default function createNavigationContainer(Component) {
     componentWillUnmount() {
       this._isMounted = false;
 
+      let isStateful = this._isStateful();
+
       // https://github.com/facebook/react-native/commit/6d1aca806cee86ad76de771ed3a1cc62982ebcd7
       if (this._linkingSub?.remove) {
         this._linkingSub?.remove();
-      } else {
+      } else if (isStateful) {
         Linking.removeEventListener('url', this._handleOpenURL);
       }
 
       this.subs && this.subs.remove();
 
-      if (this._isStateful()) {
+      if (isStateful) {
         _statefulContainerCount--;
       }
     }
